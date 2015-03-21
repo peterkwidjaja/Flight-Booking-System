@@ -109,7 +109,8 @@ public class ServerBean implements ServerBeanRemote {
         for (ScheduleEntity schedule : schedules) {
             schedule.setAvailableSeats(schedule.getAvailableSeats()+addition);
         }
-        em.merge(temp); //To find out
+        em.merge(temp);
+        em.flush();
         return true;
     }
 
@@ -129,7 +130,7 @@ public class ServerBean implements ServerBeanRemote {
     @Override
     public void addSchedule(String flightNo, String departureTime, String arrivalTime, double price) {
         ScheduleEntity newSchedule = new ScheduleEntity();
-        newSchedule.create(new Date(toDate(departureTime)), new Date(toDate(arrivalTime)), price);
+        newSchedule.create(departureTime, arrivalTime, price);
         FlightEntity temp = em.find(FlightEntity.class, flightNo);
         newSchedule.setFlight(temp);
         newSchedule.setAvailableSeats(temp.getTotalSeats());
@@ -142,27 +143,73 @@ public class ServerBean implements ServerBeanRemote {
             return 0;
         Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"'");
         List l = q.getResultList();
-        Calendar newCal = Calendar.getInstance();
-        newCal.setTimeInMillis(toDate(departureTime));
+        Calendar newCal = getDate(departureTime);
+        String date = departureTime.substring(6);
         for (Object o: l){
             ScheduleEntity temp = (ScheduleEntity) o;
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(temp.getDepartureTime().getTime());
-            if(c.get(Calendar.YEAR)==newCal.get(Calendar.YEAR) && c.get(Calendar.MONTH)==newCal.get(Calendar.MONTH) && c.get(Calendar.DAY_OF_MONTH)==newCal.get(Calendar.DAY_OF_MONTH)){
+            String dateTemp = temp.getDepartureTime().substring(6);
+            //Calendar c = getDate(temp.getDepartureTime());
+            //if(c.get(Calendar.YEAR)==newCal.get(Calendar.YEAR) && c.get(Calendar.MONTH)==newCal.get(Calendar.MONTH) && c.get(Calendar.DAY_OF_MONTH)==newCal.get(Calendar.DAY_OF_MONTH)){
+            if(date.equals(dateTemp)){
                 return 2;
             }
         }
         return 1;
     }
-    private long toDate(String input){
+    private Calendar getDate(String input){
         try{
             DateFormat format = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-            return format.parse(input).getTime();
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(format.parse(input).getTime());
+            return cal;
         }
         catch(ParseException e){
-            return -1;
+            System.err.println(e);
+            return null;
         }
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+    @Override
+    public void updateScheduleAll(String flightNo, String departure, String newDeparture, String newArrival, double price) {
+        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"' AND s.departureTime='"+departure+"'");
+        ScheduleEntity temp = (ScheduleEntity) q.getSingleResult();
+        temp.setDepartureTime(newDeparture);
+        temp.setArrivalTime(newArrival);
+        temp.setPrice(price);
+        em.merge(temp);
+        em.flush();
+    }
+
+    @Override
+    public int checkScheduleBooking(String flightNo, String departure) {
+        /*
+        0-->schedule not found
+        1-->true
+        2-->schedule got booking (only can change price)
+        */
+        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"'");
+        List l = q.getResultList();
+        for(Object o: l){
+            ScheduleEntity temp = (ScheduleEntity) o;
+            String date = temp.getDepartureTime().substring(6);
+            if(date.equals(departure)){
+                if(temp.isHasBooking()){
+                    return 2;
+                }
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public void updateScheduleBooking(String flightNo, String departure, double newPrice) {
+        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"' AND s.departureTime='"+departure+"'");
+        ScheduleEntity temp = (ScheduleEntity) q.getSingleResult();
+        temp.setPrice(newPrice);
+        em.merge(temp);
+        em.flush();
+    }
 }

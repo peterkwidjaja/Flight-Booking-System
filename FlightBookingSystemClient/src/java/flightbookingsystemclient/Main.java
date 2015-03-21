@@ -20,9 +20,10 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
         Main client = new Main();
-        Scanner sc = new Scanner(System.in);
+        
         boolean flag = true;
         while(flag){
+            Scanner sc = new Scanner(System.in);
             System.out.println("\n1. Add User\n2. Delete User\n3. Add Flights\n4. Update Flights\n5. Delete Flights\n6. Add Schedules");
             int command = sc.nextInt();
             sc.nextLine();
@@ -166,6 +167,39 @@ public class Main {
         }
         else{
             System.out.println("Error! Flight has been scheduled on the same day!");
+        }
+    }
+    public void updateSchedule(Scanner sc){
+        System.out.print("Enter flight number: ");
+        String flightNo = sc.nextLine();
+        System.out.print("Enter departure time: ");
+        String depart = sc.nextLine();
+        int check1 = serverBean.checkScheduleBooking(flightNo, depart);
+        if(check1==0){
+            System.out.println("Error! Flight does not exist!");
+        }
+        else if(check1==1){
+            System.out.print("Enter new departure date: ");
+            String newDepart = sc.nextLine();
+            int check2 = serverBean.checkSchedule(flightNo, newDepart);
+            if(check2==1){
+                System.out.print("Enter new arrival date: ");
+                String newArriv = sc.nextLine();
+                System.out.print("Enter new price: ");
+                double newPrice = sc.nextDouble();
+                serverBean.updateScheduleAll(flightNo, depart, newDepart, newArriv, newPrice);
+                System.out.println("Flight is successfully updated!");
+            }
+            else{
+                System.out.println("Error! Flight has been scheduled on the same day.");
+            }
+        }
+        else{
+            System.out.println("Schedule is associated with booking!");
+            System.out.print("Enter new price: ");
+            double newPrice = sc.nextDouble();
+            serverBean.updateScheduleBooking(flightNo, depart, newPrice);
+            System.out.println("Flight is successfully updated!");
         }
     }
 }

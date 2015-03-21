@@ -25,15 +25,15 @@ public class ScheduleEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private Date departureTime;
-    private Date arrivalTime;
+    private String departureTime;
+    private String arrivalTime;
     private double price;
     private int availableSeats;
     private boolean hasBooking;
     @ManyToOne
     private FlightEntity flight = new FlightEntity();
     
-    public void create(Date depart, Date arriv, double price){
+    public void create(String depart, String arriv, double price){
         this.departureTime = depart;
         this.arrivalTime = arriv;
         this.price = price;
@@ -74,19 +74,19 @@ public class ScheduleEntity implements Serializable {
         return "entity.Schedule[ id=" + id + " ]";
     }
 
-    public Date getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Date departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public Date getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Date arrivalTime) {
+    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 

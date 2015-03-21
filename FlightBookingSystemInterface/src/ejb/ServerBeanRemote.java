@@ -30,4 +30,10 @@ public interface ServerBeanRemote {
     void addSchedule(String flightNo, String departureTime, String arrivalTime, double price);
 
     int checkSchedule(String flightNo, String departureTime);
+
+    void updateScheduleAll(String flightNo, String departure, String newDeparture, String newArrival, double price);
+
+    int checkScheduleBooking(String flightNo, String departure);
+
+    void updateScheduleBooking(String flightNo, String departure, double newPrice);
 }
