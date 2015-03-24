@@ -50,4 +50,12 @@ public interface ServerBeanRemote {
     List<Vector> viewRequests();
 
     boolean processRequest(int id, String status, String comment);
+
+    boolean login(String username, String password);
+
+    List getUserInfo(String username);
+
+    void changeUserPass(String username, String newPassword);
+
+    void changeUserDetails(String username, int contactNo, String email);
 }

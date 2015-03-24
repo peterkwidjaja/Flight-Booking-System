@@ -91,7 +91,9 @@ public class FlightBookingServlet extends HttpServlet {
                 page = "update";
             }
             else if(page.equals("updateDetails")){
-                
+                int result = changeUserDetails(request);
+                request.setAttribute("resultDetails", result);
+                page = "update";
             }
             else if(page.equals("index") || page.equals("")){
                 System.out.println("Open index page...");

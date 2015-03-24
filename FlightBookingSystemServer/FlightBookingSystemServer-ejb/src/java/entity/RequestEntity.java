@@ -27,7 +27,7 @@ public class RequestEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String content;
-    private String time;
+    private String reqTime;
     private String status;
     private String comment;
     @ManyToOne
@@ -36,7 +36,7 @@ public class RequestEntity implements Serializable {
     public RequestEntity(){
         Date now = new Date();
         DateFormat formatter = new SimpleDateFormat("HH:mm");
-        this.time = formatter.format(now);
+        this.reqTime = formatter.format(now);
     }
     
     public void create(String content, String status, String comment){
@@ -111,17 +111,17 @@ public class RequestEntity implements Serializable {
     }
 
     /**
-     * @return the time
+     * @return the reqTime
      */
     public String getTime() {
-        return time;
+        return reqTime;
     }
 
     /**
-     * @param time the time to set
+     * @param time the reqTime to set
      */
     public void setTime(String time) {
-        this.time = time;
+        this.reqTime = time;
     }
     
 }

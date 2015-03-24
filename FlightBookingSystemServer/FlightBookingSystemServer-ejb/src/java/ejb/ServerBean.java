@@ -12,7 +12,6 @@ import entity.PaymentEntity;
 import entity.RequestEntity;
 import entity.ScheduleEntity;
 import entity.UserEntity;
-import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -353,10 +352,47 @@ public class ServerBean implements ServerBeanRemote {
         temp.setComment(comment);
         return true;
     }
-    
-    
-    
-    
-    
+
+    @Override
+    public boolean login(String username, String password) {
+        UserEntity temp = em.find(UserEntity.class, username);
+        if(temp==null){
+            return false;
+        }
+        if(temp.getPassword().equals(password)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List getUserInfo(String username) {
+        UserEntity temp = em.find(UserEntity.class, username);
+        if(temp!=null){
+            List l = new ArrayList();
+            l.add(temp.getUsername());
+            l.add(temp.getContactNo());
+            l.add(temp.getEmail());
+            return l;
+        }
+        return null;
+    }
+
+    @Override
+    public void changeUserPass(String username, String newPassword) {
+        UserEntity temp = em.find(UserEntity.class, username);
+        temp.setPassword(newPassword);
+        em.merge(temp);
+        em.flush();
+    }
+
+    @Override
+    public void changeUserDetails(String username, int contactNo, String email) {
+        UserEntity temp = em.find(UserEntity.class, username);
+        temp.setContactNo(contactNo);
+        temp.setEmail(email);
+        em.merge(temp);
+        em.flush();
+    }
     
 }

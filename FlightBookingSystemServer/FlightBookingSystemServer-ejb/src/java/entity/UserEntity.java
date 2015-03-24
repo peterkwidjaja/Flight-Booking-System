@@ -28,6 +28,8 @@ public class UserEntity implements Serializable {
     private String email;
     @OneToMany(cascade={CascadeType.PERSIST}, mappedBy="owner")
     private Collection<BookingEntity> bookings = new ArrayList<BookingEntity>();
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="owner")
+    private Collection<RequestEntity> requests = new ArrayList<RequestEntity>();
     public UserEntity(){
     }
     public void create(String username, String password, int contactNo, String email){
@@ -97,5 +99,19 @@ public class UserEntity implements Serializable {
 
     public void setBookings(Collection<BookingEntity> bookings) {
         this.bookings = bookings;
+    }
+
+    /**
+     * @return the requests
+     */
+    public Collection<RequestEntity> getRequests() {
+        return requests;
+    }
+
+    /**
+     * @param requests the requests to set
+     */
+    public void setRequests(Collection<RequestEntity> requests) {
+        this.requests = requests;
     }
 }
