@@ -5,7 +5,11 @@
  */
 package ejb;
 
+import entity.BookingEntity;
 import entity.FlightEntity;
+import entity.PassengerEntity;
+import entity.PaymentEntity;
+import entity.RequestEntity;
 import entity.ScheduleEntity;
 import entity.UserEntity;
 import java.sql.Date;
@@ -15,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Vector;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -170,11 +175,21 @@ public class ServerBean implements ServerBeanRemote {
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-
+    private ScheduleEntity findSchedule(String flightNo, String departureDate){
+        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"'");
+        List l = q.getResultList();
+        for(Object o: l){
+            ScheduleEntity temp = (ScheduleEntity) o;
+            String flightDate = temp.getDepartureTime().substring(6);
+            if(flightDate.equals(departureDate)){
+                return temp;
+            }
+        }
+        return null;
+    }
     @Override
     public void updateScheduleAll(String flightNo, String departure, String newDeparture, String newArrival, double price) {
-        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"' AND s.departureTime='"+departure+"'");
-        ScheduleEntity temp = (ScheduleEntity) q.getSingleResult();
+        ScheduleEntity temp = findSchedule(flightNo, departure);
         temp.setDepartureTime(newDeparture);
         temp.setArrivalTime(newArrival);
         temp.setPrice(price);
@@ -206,10 +221,142 @@ public class ServerBean implements ServerBeanRemote {
 
     @Override
     public void updateScheduleBooking(String flightNo, String departure, double newPrice) {
-        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"' AND s.departureTime='"+departure+"'");
-        ScheduleEntity temp = (ScheduleEntity) q.getSingleResult();
+        ScheduleEntity temp = findSchedule(flightNo, departure);
         temp.setPrice(newPrice);
         em.merge(temp);
         em.flush();
     }
+
+    @Override
+    public int deleteSchedule(String flightNo, String departure) {
+        ScheduleEntity temp = findSchedule(flightNo, departure);
+        if(temp == null){
+            return 0;
+        }
+        if(temp.isHasBooking()){
+            return 2;
+        }
+        em.remove(temp);
+        return 1;
+    }
+
+    @Override
+    public List<Vector> viewBookings() {
+        Query q = em.createQuery("SELECT b FROM Bookings b");
+        List<Vector> bookings = new ArrayList();
+        for(Object o: q.getResultList()){
+            BookingEntity b = (BookingEntity) o;
+            List<Vector> schedules = new ArrayList();
+            for(Object s: b.getSchedules()){
+                ScheduleEntity schedule = (ScheduleEntity) s;
+                Vector sch = new Vector();
+                sch.add(schedule.getFlight().getFlightNo());
+                sch.add(schedule.getDepartureTime());
+                schedules.add(sch);
+            }
+            List<Vector> passengers = new ArrayList();
+            for(Object p: b.getPassengers()){
+                PassengerEntity passenger = (PassengerEntity) p;
+                Vector psg = new Vector();
+                psg.add(passenger.getPassportNo());
+                psg.add(passenger.getName());
+                psg.add(passenger.getGender());
+                psg.add(passenger.getDob());
+                passengers.add(psg);
+            }
+            Vector bookingDetails = new Vector();
+            bookingDetails.add(b.getId());
+            bookingDetails.add(b.getBookingTime());
+            UserEntity users = b.getOwner();
+            bookingDetails.add(users.getUsername());
+            bookingDetails.add(users.getContactNo());
+            bookingDetails.add(users.getEmail());
+            Vector paymentDetails = new Vector();
+            PaymentEntity payment = b.getPayment();
+            paymentDetails.add(b.getTotalAmount());
+            if(payment==null){
+                paymentDetails.add(false);
+            }
+            else{
+                paymentDetails.add(true);
+                paymentDetails.add(payment.getPaymentTime());
+                paymentDetails.add(payment.getCardType());
+                paymentDetails.add(payment.getCardNo());
+                paymentDetails.add(payment.getCardHolderName());
+            }
+            bookingDetails.add(schedules);
+            bookingDetails.add(passengers);
+            bookingDetails.add(paymentDetails);
+            bookings.add(bookingDetails);
+        }
+        return bookings;
+    }
+
+    @Override
+    public List<Vector> viewSchedules() {
+        Query q = em.createQuery("SELECT s FROM Schedules s");
+        List<Vector> schedules = new ArrayList();
+        for(Object o: q.getResultList()){
+            ScheduleEntity s = (ScheduleEntity) o;
+            Vector schedule = new Vector();
+            schedule.add(s.getFlight().getFlightNo());
+            schedule.add(s.getDepartureTime());
+            schedule.add(s.getArrivalTime());
+            schedule.add(s.getAvailableSeats());
+            schedule.add(s.getPrice());
+            schedules.add(schedule);
+        }
+        return schedules;
+    }
+
+    @Override
+    public List<Vector> viewFlights() {
+        Query q = em.createQuery("SELECT f FROM Flights f");
+        List<Vector> flights = new ArrayList();
+        for(Object o: q.getResultList()){
+            FlightEntity f = (FlightEntity) o;
+            Vector flight = new Vector();
+            flight.add(f.getFlightNo());
+            flight.add(f.getDepartureCity());
+            flight.add(f.getArrivalCity());
+            flight.add(f.getAircraftType());
+            flight.add(f.getTotalSeats());
+            flights.add(flight);
+        }
+        return flights;
+    }
+
+    @Override
+    public List<Vector> viewRequests() {
+        Query q = em.createQuery("SELECT r FROM Requests r WHERE r.status='Unread' OR r.status='Processing'");
+        List<Vector> requests = new ArrayList();
+        for(Object o: q.getResultList()){
+            RequestEntity r = (RequestEntity) o;
+            Vector req = new Vector();
+            req.add(r.getId());
+            req.add(r.getTime());
+            req.add(r.getOwner().getUsername());
+            req.add(r.getContent());
+            
+            requests.add(req);
+        }
+        return requests;
+    }
+
+    @Override
+    public boolean processRequest(int id, String status, String comment) {
+        RequestEntity temp = em.find(RequestEntity.class, id);
+        if(temp==null){
+            return false;
+        }
+        temp.setStatus(status);
+        temp.setComment(comment);
+        return true;
+    }
+    
+    
+    
+    
+    
+    
 }

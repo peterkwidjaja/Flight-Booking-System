@@ -6,7 +6,9 @@
 package flightbookingsystemclient;
 
 import ejb.ServerBeanRemote;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
 import javax.ejb.EJB;
 
 /**
@@ -172,18 +174,18 @@ public class Main {
     public void updateSchedule(Scanner sc){
         System.out.print("Enter flight number: ");
         String flightNo = sc.nextLine();
-        System.out.print("Enter departure time: ");
+        System.out.print("Enter departure date: ");
         String depart = sc.nextLine();
         int check1 = serverBean.checkScheduleBooking(flightNo, depart);
         if(check1==0){
             System.out.println("Error! Flight does not exist!");
         }
         else if(check1==1){
-            System.out.print("Enter new departure date: ");
+            System.out.print("Enter new departure time: ");
             String newDepart = sc.nextLine();
             int check2 = serverBean.checkSchedule(flightNo, newDepart);
             if(check2==1){
-                System.out.print("Enter new arrival date: ");
+                System.out.print("Enter new arrival time: ");
                 String newArriv = sc.nextLine();
                 System.out.print("Enter new price: ");
                 double newPrice = sc.nextDouble();
@@ -200,6 +202,112 @@ public class Main {
             double newPrice = sc.nextDouble();
             serverBean.updateScheduleBooking(flightNo, depart, newPrice);
             System.out.println("Flight is successfully updated!");
+        }
+    }
+    public void deleteSchedule(Scanner sc){
+        System.out.print("Enter flight number: ");
+        String flightNo = sc.nextLine();
+        System.out.print("Enter departure date: ");
+        String depart = sc.nextLine();
+        int result = serverBean.deleteSchedule(flightNo, depart);
+        if(result==0){
+            System.out.println("Error! Schedule does not exist!");
+        }
+        else if(result==1){
+            System.out.println("Schedule has been successfully deleted.");
+        }
+        else{
+            System.out.println("Error! Schedule is associated with booking.");
+        }
+    }
+    public void viewBookings(){
+        List<Vector> list = serverBean.viewBookings();
+        int count = 1;
+        for(Object o: list){
+            Vector temp = (Vector) o;
+            
+            System.out.println("\n\n============== Booking "+count+" ===============");
+            System.out.println("Booking number: "+temp.get(0));
+            System.out.println("Booking time: "+temp.get(1));
+            System.out.println("Username: "+temp.get(2));
+            System.out.println("Contact number: "+temp.get(3));
+            System.out.println("Email: "+temp.get(4));
+            List<Vector> schedules = (List<Vector>) temp.get(5);
+            System.out.print("\n");
+            for(int i=0; i<schedules.size(); i++){
+                Vector sch = schedules.get(i);
+                System.out.println("Flight "+(i+1)+" number: "+sch.get(0));
+                System.out.println("Flight "+(i+1)+" departure time: "+sch.get(1));
+            }
+            System.out.println("--------- Passengers ---------");
+            List<Vector> passengers = (List<Vector>) temp.get(6);
+            for(int i=0; i<passengers.size(); i++){
+                Vector psg = passengers.get(i);
+                System.out.println((i+1)+" Passport number: "+psg.get(0));
+                System.out.println((i+1)+" Name: "+ psg.get(1));
+                System.out.println((i+1)+" Gender: "+psg.get(2));
+                System.out.println((i+1)+" Date of birth: "+psg.get(3));
+                System.out.print("\n");
+            }
+            System.out.println("--------- Payment ---------");
+            Vector payment = (Vector) temp.get(7);
+            System.out.println("Total amount: $"+payment.get(0));
+            if((Boolean)payment.get(1)){
+                System.out.println("Payment status: Paid");
+                System.out.println("Payment time: "+payment.get(2));
+                System.out.println("Card type: "+payment.get(3));
+                System.out.println("Card number: "+payment.get(4));
+                System.out.println("Holder name: "+payment.get(5));
+            }
+            else{
+                System.out.println("Payment status: Unpaid");
+            }
+            count++;
+        }
+    }
+    public void viewSchedules(){
+        int count=1;
+        for(Object o: serverBean.viewSchedules()){
+            Vector temp = (Vector) o;
+            System.out.println("\n========== Schedule "+count+" ==========");
+            System.out.println("Flight number: "+temp.get(0));
+            System.out.println("Departure time: "+temp.get(1));
+            System.out.println("Arrival time: " + temp.get(2));
+            System.out.println("Available seats: "+temp.get(3));
+            System.out.println("Price: "+temp.get(4));
+            count++;
+        }
+    }
+    public void viewFlights(){
+        int count=1;
+        for(Object o: serverBean.viewFlights()){
+            Vector temp = (Vector) o;
+            System.out.println("\n========== Flight "+count+" ==========");
+            System.out.println("Flight number: "+temp.get(0));
+            System.out.println("Departure city: "+temp.get(1));
+            System.out.println("Arrival city: " + temp.get(2));
+            System.out.println("Aircraft type: "+temp.get(3));
+            System.out.println("Total seats: "+temp.get(4));
+        }
+    }
+    public void processRequest(Scanner sc){
+        for(Object o: serverBean.viewRequests()){
+            Vector temp = (Vector) o;
+            System.out.println(temp.get(0)+": "+temp.get(1)+", "+temp.get(2)+", \""+ temp.get(3)+"\"");
+            
+        }
+        System.out.print("\nEnter the request ID: ");
+        int id = sc.nextInt();
+        System.out.print("Change the status to: ");
+        String status = sc.next();
+        sc.nextLine();
+        System.out.print("Comments: ");
+        String comment = sc.nextLine();
+        if(serverBean.processRequest(id, status, comment)){
+            System.out.println("Request has been updated.");
+        }
+        else{
+            System.out.println("ID cannot be found.");
         }
     }
 }

@@ -7,7 +7,9 @@
 package entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -30,7 +32,7 @@ public class BookingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private Date bookingTime;
+    private String bookingTime;
     private double totalAmount;
     
     @ManyToOne
@@ -45,7 +47,9 @@ public class BookingEntity implements Serializable {
     private Set<ScheduleEntity> schedules = new HashSet<ScheduleEntity>();
     
     public BookingEntity(){
-        this.bookingTime = new Date(System.currentTimeMillis());
+        Date now = new Date();
+        DateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        this.bookingTime = formatter.format(now);
     }
     public int getId() {
         return id;
@@ -80,11 +84,11 @@ public class BookingEntity implements Serializable {
         return "entity.Booking[ id=" + id + " ]";
     }
 
-    public Date getBookingTime() {
+    public String getBookingTime() {
         return bookingTime;
     }
 
-    public void setBookingTime(Date bookingTime) {
+    public void setBookingTime(String bookingTime) {
         this.bookingTime = bookingTime;
     }
 

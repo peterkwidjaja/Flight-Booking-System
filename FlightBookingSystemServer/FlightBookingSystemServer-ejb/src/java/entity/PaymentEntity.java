@@ -7,7 +7,9 @@
 package entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,17 +29,23 @@ public class PaymentEntity implements Serializable {
     private String cardType;
     private long cardNo;
     private String cardHolderName;
-    private Date paymentTime;
+    private String paymentTime;
     
     @OneToOne(mappedBy="payment")
     private BookingEntity booking;
+    
+    public PaymentEntity(){ //auto-generation of payment time
+        Date now = new java.util.Date();
+        DateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        this.paymentTime = formatter.format(now);
+    }
     
     public void create(String cardType, long cardNo, String name){
         this.cardType = cardType;
         this.cardNo = cardNo;
         this.cardHolderName = name;
-        paymentTime = new Date(System.currentTimeMillis()); //auto generation of payment time
     }
+    
     public int getId() {
         return id;
     }
@@ -95,11 +103,11 @@ public class PaymentEntity implements Serializable {
         this.cardHolderName = cardHolderName;
     }
 
-    public Date getPaymentTime() {
+    public String getPaymentTime() {
         return paymentTime;
     }
 
-    public void setPaymentTime(Date paymentTime) {
+    public void setPaymentTime(String paymentTime) {
         this.paymentTime = paymentTime;
     }
 

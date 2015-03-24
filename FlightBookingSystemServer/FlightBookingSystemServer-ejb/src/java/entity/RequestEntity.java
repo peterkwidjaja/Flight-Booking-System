@@ -7,6 +7,9 @@
 package entity;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,10 +27,17 @@ public class RequestEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String content;
+    private String time;
     private String status;
     private String comment;
     @ManyToOne
     private UserEntity owner = new UserEntity();
+    
+    public RequestEntity(){
+        Date now = new Date();
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        this.time = formatter.format(now);
+    }
     
     public void create(String content, String status, String comment){
         this.content = content;
@@ -98,6 +108,20 @@ public class RequestEntity implements Serializable {
 
     public void setOwner(UserEntity owner) {
         this.owner = owner;
+    }
+
+    /**
+     * @return the time
+     */
+    public String getTime() {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(String time) {
+        this.time = time;
     }
     
 }

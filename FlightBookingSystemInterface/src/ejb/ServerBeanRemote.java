@@ -5,6 +5,8 @@
  */
 package ejb;
 
+import java.util.List;
+import java.util.Vector;
 import javax.ejb.Remote;
 
 /**
@@ -36,4 +38,16 @@ public interface ServerBeanRemote {
     int checkScheduleBooking(String flightNo, String departure);
 
     void updateScheduleBooking(String flightNo, String departure, double newPrice);
+
+    int deleteSchedule(String flightNo, String departure);
+
+    List<Vector> viewBookings();
+
+    List<Vector> viewSchedules();
+
+    List<Vector> viewFlights();
+
+    List<Vector> viewRequests();
+
+    boolean processRequest(int id, String status, String comment);
 }
