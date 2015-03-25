@@ -18,17 +18,75 @@
     </head>
 
     <body>
+    <%
+        String currentUser = (String)request.getAttribute("user");
+        boolean isLoggedIn = !currentUser.equals("");
+    %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Flight Booking System</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav nav-pills navbar-nav">
+                    <%
+                        if(isLoggedIn){
+                    %>
+                    <li><a href="" title="">Search</a></li>
+                    <li><a href="" title="">Booking</a></li>
+                    <li><a href="" title="">Request</a></li>
+                    <%
+                        }
+                    %>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <%
+                        if(isLoggedIn){
+                    %>
+                    
+                    <li class="dropdown">
+                        <a data-target="#" id="user-menu" data-toggle="dropdown" role="button" class="dropdown-toggle"><%= currentUser %><span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="user-menu">
+                            <li role="presentation">
+                                <a href="update" role="menuitem" tabindex="-1">Update</a>
+                            </li>
+
+                            <li role="presentation">
+                            <a href="logout" role="menuitem" tabindex="-1">Sign out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <%
+                        }
+                        else{
+                    %>
+
+                    <li>
+                        <a href="login">Login</a>
+                    </li>
+                    <%
+                        }
+                    %>
+                </ul>                
+            </div>
+
+        </div>
+    </nav>
     <div class="container">
         
-        <%
-        String currentUser = (String)request.getAttribute("user");
-        %>
+
         <div class = "jumbotron">
             <div class="container">
             <center>
                 
                 <%
-                    if(currentUser.equals("")){
+                    if(!isLoggedIn){
                 %>
                 <h1>Welcome to Flight Booking System</h1>
                 <a href="register" class="btn btn-primary btn-lg">Register</a>
@@ -37,7 +95,7 @@
                     }
                     else{
                 %>
-                <p>Hello, <%= (String)request.getAttribute("user") %></p>
+                <p>Hello, <%= currentUser %></p>
                 <h1>Welcome to Flight Booking System</h1>
                 <a href="update" class="btn btn-primary btn-lg">Update</a>
                 <a href="search" class="btn btn-primary btn-lg">Search</a>

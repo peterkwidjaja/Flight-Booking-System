@@ -23,7 +23,7 @@ public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     private String username;
-    private String password;
+    private String password; //Should be hashed with MD5
     private int contactNo;
     private String email;
     @OneToMany(cascade={CascadeType.PERSIST}, mappedBy="owner")

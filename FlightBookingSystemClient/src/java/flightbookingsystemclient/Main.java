@@ -6,6 +6,8 @@
 package flightbookingsystemclient;
 
 import ejb.ServerBeanRemote;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
@@ -62,12 +64,28 @@ public class Main {
         int contact = sc.nextInt();
         System.out.print("Enter email address: ");
         String email = sc.next().trim();
+        try{
+            password = hash(password);
+        }
+        catch(NoSuchAlgorithmException e){
+            System.err.println(e);
+        }
         if(serverBean.addUser(username, password, contact, email)){
             System.out.println("Account has been successfully created!");
         }
         else{
             System.out.println("Error! Account exists!");
         }
+    }
+    private String hash(String password) throws NoSuchAlgorithmException{
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        byte[] bytes = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<bytes.length; i++){
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
     }
     public void delUser(Scanner sc){
         System.out.print("Enter username to delete: ");
@@ -77,7 +95,7 @@ public class Main {
             System.out.println("Account has been successfully deleted!");
         }
         else if(result==2) {
-            System.out.println("Error! Accoung does not exist!");
+            System.out.println("Error! Account does not exist!");
         }
         else{
             System.out.println("Error! Account is associated with booking or request, cannot be deleted!");

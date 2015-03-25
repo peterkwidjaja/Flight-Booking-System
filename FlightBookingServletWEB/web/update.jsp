@@ -32,24 +32,73 @@
                             <p class="form-control-static"><%= data.get(0) %></p>
                         </div>
                     </div>
+                    <%
+                        Integer resultPass = (Integer) request.getAttribute("resultPass");
+                        if(resultPass!=null && resultPass==1){
+                    
+                    %>
+                    <div class="form-group has-error has-feedback">
+                        <label for="oldPass" class="col-sm-2 control-label">Old Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter old password" aria-describedby="inputError">
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError" class="sr-only">(error)</span>
+                        </div>
+                    </div>
+                    <%
+                        }
+                        else{
+                    %>
                     <div class="form-group">
                         <label for="oldPass" class="col-sm-2 control-label">Old Password</label>
                         <div class="col-sm-10">
                             <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter old password">
                         </div>
                     </div>
+                    <%
+                        }
+                        if(resultPass!=null && resultPass==2){
+                    %>
+
+                    <div class="form-group has-error has-feedback">
+                        <label for="newPass" class="col-sm-2 control-label">New Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password" aria-describedby="inputError">
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError" class="sr-only">(error)</span>
+                        </div>
+                    </div>
+                    <%
+                        } else{
+                    %>
+
                     <div class="form-group">
                         <label for="newPass" class="col-sm-2 control-label">New Password</label>
                         <div class="col-sm-10">
                             <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password">
                         </div>
                     </div>
+                    <% }
+                        if(resultPass!=null && resultPass==3){
+                    %>
+                    <div class="form-group has-error has-feedback">
+                        <label for="newPass2" class="col-sm-2 control-label">New Password Again</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="newPass2" id="newPass2" placeholder="Re-enter new password" aria-describedby="inputError">
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError" class="sr-only">(error)</span>
+                        </div>
+                    </div>
+                    <%
+                        } else{
+                    %>
                     <div class="form-group">
                         <label for="newPass2" class="col-sm-2 control-label">New Password Again</label>
                         <div class="col-sm-10">
                             <input type="password" class="form-control" name="newPass2" id="newPass2" placeholder="Re-enter new password">
                         </div>
                     </div>
+                    <% } %>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>

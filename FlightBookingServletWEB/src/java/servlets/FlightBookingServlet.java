@@ -8,12 +8,15 @@ package servlets;
 import ejb.ServerBeanRemote;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +48,12 @@ public class FlightBookingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             RequestDispatcher dispatcher;
+            Cookie[] cookies = request.getCookies();
+            if(cookies!=null)
+                processCookie(cookies);
+            
+            
+            request.setAttribute("user", currentUser);
             ServletContext servletContext = getServletContext();
             String page = request.getPathInfo().substring(1); //get request page
             
@@ -60,26 +69,34 @@ public class FlightBookingServlet extends HttpServlet {
                 else{
                     page = "register";
                     request.setAttribute("message", "Error");
-                    System.out.println("Resgister error!");
+                    System.out.println("Register error!");
                 }
             }
             else if(page.equals("login")){
-                
+                String method = request.getMethod();
+                if("POST".equals(method)){
+                    String hashedPass = login(request);
+                    if(!hashedPass.equals("")){
+                        request.setAttribute("status", true);
+                        Cookie loginCookie = new Cookie("UID",hashedPass+currentUser); //The cookie contains hashed password and username. This is a very vulnerable method but is used for simplicity purpose.
+                        response.addCookie(loginCookie);
+                        System.out.println("Login Successful");
+                    }
+                    else{
+                        request.setAttribute("status", false);
+                        System.out.println("Login Unsuccessful");
+                    }                    
+                }
             }
-            else if(page.equals("loginStatus")){
-                if(login(request)){
-                    request.setAttribute("status", true);
-                    request.setAttribute("user", currentUser);
-                    page="index";
-                }
-                else{
-                    request.setAttribute("status", false);
-                    request.setAttribute("user", currentUser);
-                    page="login";
-                }
+            else if(page.equals("logout")){
+                logout(request, response);
+                page = "index";
             }
             else if(page.equals("search")){
-                
+                String method = request.getMethod();
+                if("POST".equals(method)){
+                    search(request,response);
+                }
             }
             else if(page.equals("update")){
                 data = getUserInfo();
@@ -87,11 +104,15 @@ public class FlightBookingServlet extends HttpServlet {
             }
             else if(page.equals("changePass")){
                 int result = changePassword(request);
+                data = getUserInfo();
+                request.setAttribute("data", data);
                 request.setAttribute("resultPass", result);
                 page = "update";
             }
             else if(page.equals("updateDetails")){
                 int result = changeUserDetails(request);
+                data = getUserInfo();
+                request.setAttribute("data", data);
                 request.setAttribute("resultDetails", result);
                 page = "update";
             }
@@ -114,10 +135,36 @@ public class FlightBookingServlet extends HttpServlet {
             log("Exception in FlightBookingServlet: processRequest()"+e);
         }
     }
+    private void search(HttpServletRequest request, HttpServletResponse response){
+        String departureCity = request.getParameter("departCity");
+        System.out.println("SEARCH");
+        String departDate = request.getParameter("departDate");
+        String dates[] = departDate.split("-");
+        departDate = dates[2]+"/"+dates[1]+"/"+dates[0];
+        System.out.println(departDate);
+        String arrivalCity = request.getParameter("arrivCity");
+        String seats = request.getParameter("passenger");
+    }
+    private void processCookie(Cookie[] cookies){
+        for(Cookie cookie: cookies){
+            if("UID".equals(cookie.getName())){
+                String uid = cookie.getValue();
+                String id = uid.substring(32);
+                uid = uid.substring(0,32);
+                login(id, uid);
+            }
+        }
+    }
     
     private boolean register(HttpServletRequest request){
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        try{
+            password = hash(password);
+        }
+        catch(NoSuchAlgorithmException e){
+            System.err.println(e);
+        }
         int contactNo = Integer.parseInt(request.getParameter("contactNo"));
         String email = request.getParameter("email");
         if(serverBean.addUser(username, password, contactNo, email)){
@@ -125,18 +172,44 @@ public class FlightBookingServlet extends HttpServlet {
         }
         return false;
     }
-    private boolean login(HttpServletRequest request){
+    private String login(HttpServletRequest request){
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        try{
+            password = hash(password);
+        }
+        catch(NoSuchAlgorithmException e){
+            System.err.println(e);
+        }
         if(serverBean.login(username, password)){
             currentUser = username;
-            return true;
+            return password;
         }
-        return false;
+        return "";
+    }
+    private void login(String username, String password){
+        if(serverBean.login(username, password)){
+            currentUser = username;
+        }
     }
     
-    private void logout(HttpServletRequest request){
+    private String hash(String password) throws NoSuchAlgorithmException{
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        byte[] bytes = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<bytes.length; i++){
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
+    
+    private void logout(HttpServletRequest request, HttpServletResponse response){
         currentUser = "";
+        Cookie logoutCookie = new Cookie("UID","");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        request.setAttribute("user", currentUser);
     }
     private boolean isLoggedIn(){
         return !currentUser.equals("");
@@ -155,7 +228,7 @@ public class FlightBookingServlet extends HttpServlet {
         String oldPass = request.getParameter("oldPass");
         String newPass = request.getParameter("newPass");
         String newPass2 = request.getParameter("newPass2");
-        if(!newPass.equals("")){
+        if(newPass.equals("")){
             return 2;
         }
         if(!newPass.equals(newPass2)){
