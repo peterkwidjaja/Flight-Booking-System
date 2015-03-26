@@ -394,5 +394,83 @@ public class ServerBean implements ServerBeanRemote {
         em.merge(temp);
         em.flush();
     }
+
+    @Override
+    public List<Vector> searchSchedule(String departDate, String departCity, String arrivCity, int seats){
+        Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.departureCity='"+departCity+"' AND s.availableSeats>="+seats);   //get flights that have more than required seats and correct departure city
+        List list = q.getResultList();
+        if(list.size()==0){
+            return null;
+        }
+        filterDate(list,departDate); //eliminate wrong departure dates
+        List<Vector> result = new ArrayList<>();
+        for(Object o: list){
+            ScheduleEntity schedule = (ScheduleEntity) o;
+            DateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+            
+            //Add schedule to result if the arrival city matches the requirement
+            if(schedule.getFlight().getArrivalCity().equalsIgnoreCase(arrivCity)){
+                Vector v = new Vector();
+                v.add(false);
+                v.add(schedule.getId());
+                v.add(schedule.getFlight().getFlightNo());
+                v.add(schedule.getFlight().getDepartureCity());
+                v.add(schedule.getDepartureTime());
+                v.add(schedule.getFlight().getArrivalCity());
+                v.add(schedule.getArrivalTime());
+                v.add(schedule.getPrice());
+                result.add(v);
+            }
+            
+            else{
+                String stop = schedule.getFlight().getArrivalCity();
+                Query q2 = em.createQuery("SELECT s FROM Schedules s  s.flight.departureCity='"+stop+"' AND s.flight.arrivalCity ='"+arrivCity+"' AND s.availableSeats>="+seats);
+                for(Object obj: q2.getResultList()){
+                    try{
+                        ScheduleEntity transit = (ScheduleEntity) obj;
+                        Calendar c1 = Calendar.getInstance();
+                        Calendar c2 = Calendar.getInstance();
+                        c1.setTime(formatter.parse(schedule.getArrivalTime()));
+                        c2.setTime(formatter.parse(transit.getDepartureTime()));
+                        long timeDist = c2.getTimeInMillis()-c1.getTimeInMillis();
+                        //time distance between flights has at least 30 minutes and maximumof 6 hours
+                        if(timeDist <= 21600000 && timeDist > 1800000){
+                            Vector v = new Vector();
+                            v.add(true);
+                            v.add(schedule.getId());
+                            v.add(schedule.getFlight().getFlightNo());
+                            v.add(schedule.getFlight().getDepartureCity());
+                            v.add(schedule.getDepartureTime());
+                            v.add(schedule.getFlight().getArrivalCity());
+                            v.add(schedule.getArrivalTime());
+                            v.add(schedule.getPrice());
+                            v.add(transit.getId());
+                            v.add(transit.getFlight().getFlightNo());
+                            v.add(transit.getFlight().getDepartureCity());
+                            v.add(transit.getDepartureTime());
+                            v.add(transit.getFlight().getArrivalCity());
+                            v.add(transit.getArrivalTime());
+                            v.add(transit.getPrice());
+                            result.add(v);
+                        }                        
+                    }
+                    catch(ParseException e){
+                        System.err.println("Error at Search Schedule: "+e);
+                    }
+
+                }
+            }
+        }
+        return result;
+    }
+    private void filterDate(List list, String departDate){
+        for(Object o: list){
+            ScheduleEntity schedule = (ScheduleEntity) o;
+            String flightDate = schedule.getDepartureTime().substring(6);
+            if(!flightDate.equals(departDate)){
+                list.remove(o);          
+            }
+        }
+    }
     
 }

@@ -58,4 +58,6 @@ public interface ServerBeanRemote {
     void changeUserPass(String username, String newPassword);
 
     void changeUserDetails(String username, int contactNo, String email);
+
+    List<Vector> searchSchedule(String departDate, String departCity, String arrivCity, int seats);
 }

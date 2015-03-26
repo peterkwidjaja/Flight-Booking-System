@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Vector;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -48,6 +49,7 @@ public class FlightBookingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             RequestDispatcher dispatcher;
+            data=null;  //Reset data
             Cookie[] cookies = request.getCookies();
             if(cookies!=null)
                 processCookie(cookies);
@@ -96,6 +98,7 @@ public class FlightBookingServlet extends HttpServlet {
                 String method = request.getMethod();
                 if("POST".equals(method)){
                     search(request,response);
+                    request.setAttribute("data", data);
                 }
             }
             else if(page.equals("update")){
@@ -137,13 +140,14 @@ public class FlightBookingServlet extends HttpServlet {
     }
     private void search(HttpServletRequest request, HttpServletResponse response){
         String departureCity = request.getParameter("departCity");
-        System.out.println("SEARCH");
         String departDate = request.getParameter("departDate");
         String dates[] = departDate.split("-");
         departDate = dates[2]+"/"+dates[1]+"/"+dates[0];
-        System.out.println(departDate);
         String arrivalCity = request.getParameter("arrivCity");
         String seats = request.getParameter("passenger");
+        
+        ArrayList<Vector> list = (ArrayList) serverBean.searchSchedule(departDate, departureCity, arrivalCity, Integer.parseInt(seats));
+        data = list;
     }
     private void processCookie(Cookie[] cookies){
         for(Cookie cookie: cookies){
