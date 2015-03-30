@@ -62,4 +62,8 @@ public interface ServerBeanRemote {
     List<Vector> searchSchedule(String departDate, String departCity, String arrivCity, int seats);
 
     int createBooking(String username, int[] scheduleID, int seats, List<Vector> passengers);
+
+    List<Vector> getUnpaidBooking(String username);
+
+    void makePayment(int bookingID, String cardType, long cardNo, String name);
 }

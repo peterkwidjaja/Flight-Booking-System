@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -112,11 +113,29 @@ public class FlightBookingServlet extends HttpServlet {
                     list.add(seats);
                     list.add(scheduleChoice);
                     request.setAttribute("data", list);
+                    page = "index";
                 }
             }
             else if(page.equals("confirmBook")){
                 if("POST".equals(request.getMethod())){
                     confirmBook(request);
+                }
+            }
+            
+            else if(page.equals("payment")){
+                if("POST".equals(request.getMethod())){
+                    
+                }
+                else{
+                    viewPayment(request,response);
+                }
+            }
+            else if(page.equals("makePayment")){
+                if("GET".equals(request.getMethod())){
+                    
+                }
+                else{
+                    makePayment(request,response);
                 }
             }
             else if(page.equals("update")){
@@ -168,12 +187,7 @@ public class FlightBookingServlet extends HttpServlet {
         data = list;
         request.setAttribute("seats", seats);
     }
-    private void bookSingleFlight(String id, int seats){
-        
-    }
-    private void bookConnectFlight(String id1, String id2, int seats){
-        
-    }
+    
     private void confirmBook(HttpServletRequest request){
         String[] schedule = request.getParameter("schedule").split(" ");
         int seats = Integer.parseInt(request.getParameter("seats"));
@@ -305,6 +319,18 @@ public class FlightBookingServlet extends HttpServlet {
         }
         serverBean.changeUserDetails(currentUser, Integer.parseInt(contactNo), email);
         return 0;
+    }
+    
+    private void viewPayment(HttpServletRequest request, HttpServletResponse response){
+        List<Vector> result = serverBean.getUnpaidBooking(currentUser);
+        request.setAttribute("data", result);
+    }
+    private void makePayment(HttpServletRequest request, HttpServletResponse response){
+        int id = Integer.parseInt(request.getParameter("bookingID"));
+        String cardtype = request.getParameter("cardType");
+        long cardNo = Long.parseLong(request.getParameter("cardNo"));
+        String name = request.getParameter("name");
+        serverBean.makePayment(id, cardtype, cardNo, name);
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

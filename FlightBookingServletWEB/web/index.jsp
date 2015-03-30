@@ -38,9 +38,9 @@
                     <%
                         if(isLoggedIn){
                     %>
-                    <li><a href="" title="">Search</a></li>
-                    <li><a href="" title="">Booking</a></li>
-                    <li><a href="" title="">Request</a></li>
+                    <li><a href="search" title="">Search</a></li>
+                    <li><a href="view" title="">Booking</a></li>
+                    <li><a href="request" title="">Request</a></li>
                     <%
                         }
                     %>

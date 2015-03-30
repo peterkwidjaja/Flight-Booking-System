@@ -17,7 +17,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -402,15 +404,6 @@ public class ServerBean implements ServerBeanRemote {
         if(list.size()==0){
             return null;
         }
-        /*
-        for(Object o: list){
-            ScheduleEntity schedule = (ScheduleEntity) o;
-            String flightDate = schedule.getDepartureTime().substring(6);
-            if(!flightDate.equals(departDate)){
-                list.remove(o);          
-            }
-        }
-        */
         List<Vector> result = new ArrayList<>();
         for(Object o: list){
             ScheduleEntity schedule = (ScheduleEntity) o;
@@ -497,8 +490,11 @@ public class ServerBean implements ServerBeanRemote {
         newBooking.setOwner(user);
         for(int i=0; i<seats;i++){
             Vector v = passengers.get(i);
-            PassengerEntity passenger = new PassengerEntity();
-            passenger.create((String)v.get(1), (String)v.get(0), (String)v.get(2), (String)v.get(3));
+            PassengerEntity passenger = em.find(PassengerEntity.class, (String)v.get(1));
+            if(passenger==null){
+                passenger = new PassengerEntity();
+                passenger.create((String)v.get(1), (String)v.get(0), (String)v.get(2), (String)v.get(3));
+            }
             newBooking.getPassengers().add(passenger);
         }
         double price = 0;
@@ -516,6 +512,47 @@ public class ServerBean implements ServerBeanRemote {
         
         return 0;
     }
+
+    @Override
+    public List<Vector> getUnpaidBooking(String username) {
+        Query q = em.createQuery("SELECT b from Bookings b where b.owner.username=:user AND b.payment IS NULL");
+        q.setParameter("user", username);
+        List list = q.getResultList();
+        List<Vector> result = new ArrayList<Vector>();
+        for(Object o: list){
+            BookingEntity book = (BookingEntity) o;
+            Vector v = new Vector();
+            v.add(book.getId());
+            v.add(book.getBookingTime());
+            String dest = "";
+            Set<ScheduleEntity> sch = book.getSchedules();
+            for(ScheduleEntity s: sch){
+                if(dest.equals("")){
+                    dest = s.getFlight().getDepartureCity() + " - "+s.getFlight().getArrivalCity();
+                }
+                else{
+                    dest = dest + " - " + s.getFlight().getArrivalCity();
+                }
+            }
+            v.add(dest);
+            v.add(book.getPassengers().size());
+            v.add(book.getTotalAmount());
+            result.add(v);
+        }
+        
+        return result;
+    }
+
+    @Override
+    public void makePayment(int bookingID, String cardType, long cardNo, String name) {
+        BookingEntity booking = em.find(BookingEntity.class, bookingID);
+        PaymentEntity payment = new PaymentEntity();
+        payment.create(cardType, cardNo, name);
+        payment.setBooking(booking);
+        booking.setPayment(payment);
+        em.persist(payment);
+    }
+    
     
     
 }

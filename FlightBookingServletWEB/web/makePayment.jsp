@@ -1,35 +1,27 @@
-<%-- 
-    Document   : login
-    Created on : Mar 24, 2015, 2:54:20 PM
-    Author     : Peter K W
-    --%>
 
-    <%@page contentType="text/html" pageEncoding="UTF-8"%>
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>Flight Booking System</title>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    </head>
-    <body>
-        <%
-        Boolean status = (Boolean)request.getAttribute("status");
-        if(status!=null && status){
-        %>
-        <script>
-          window.location.replace("index");
-        </script>
-        <%
-          }
-        %>       
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Flight Booking System - Payment</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">  
+</head>
+<body>
+    
     <%
         String currentUser = (String)request.getAttribute("user");
         boolean isLoggedIn = !currentUser.equals("");
+        if(!isLoggedIn){
+    %>
+    <script type="javascript">
+		window.location.replace("index");
+    </script>
+    <%
+        }
     %>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -57,8 +49,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <%
                         if(isLoggedIn){
-                    %>
-                    
+                    %>                    
                     <li class="dropdown">
                         <a data-target="#" id="user-menu" data-toggle="dropdown" role="button" class="dropdown-toggle"><%= currentUser %><span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="user-menu">
@@ -75,7 +66,6 @@
                         }
                         else{
                     %>
-
                     <li>
                         <a href="login">Login</a>
                     </li>
@@ -86,35 +76,37 @@
             </div>
 
         </div>
-    </nav>
-
-      <div class="container">
-
-
-      <h1>Login</h1>
-      <form class="form-horizontal" action="login" method="POST">
-        <div class="form-group">
-          <label for="username" class="col-sm-2 control-label">Username</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" name="username" id="username" placeholder="Enter username">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="password" class="col-sm-2 control-label">Password</label>
-          <div class="col-sm-10">
-            <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
-          </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Submit</button>
+    </nav>    
+    
+    <div class="container">
+        <h1>Card Details</h1>
+        <form action="makePayment" method="POST" class="form-horizontal">
+            <input type="hidden" name="bookingID" value="<%= request.getParameter("bookingNo")%>">
+            <div class="form-group">
+                <label for="cardType" class="col-sm-2 control-label">Card Type:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="cardType" id="cardType" placeholder="Enter card type">
+                </div>
             </div>
-        </div>
-        
-      </form>
-
+            <div class="form-group">
+                <label for="cardNo" class="col-sm-2 control-label">Card Number:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="cardNo" id="cardNo" placeholder="Enter card number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Holder Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Enter holder name">
+                </div>
+            </div>                        
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Proceed</button>
+                </div>
+            </div>            
+        </form>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  </body>
-  </html>
+    
+</body>
+</html>
