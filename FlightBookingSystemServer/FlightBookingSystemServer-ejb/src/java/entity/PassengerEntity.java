@@ -23,14 +23,14 @@ public class PassengerEntity implements Serializable {
     @Id
     private String passportNo;
     private String name;
-    private char gender;
-    private Date dob;
+    private String gender;
+    private String dob;
     
-    public void create(String passportNo, String name, char gender, String dob){
+    public void create(String passportNo, String name, String gender, String dob){
         this.passportNo = passportNo;
         this.name = name;
         this.gender = gender;
-        this.dob = Date.valueOf(dob);
+        this.dob = dob;
     }
     public String getPassportNo() {
         return passportNo;
@@ -73,19 +73,19 @@ public class PassengerEntity implements Serializable {
         this.name = name;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public Date getDob() {
+    public String getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(String dob) {
         this.dob = dob;
     }
     

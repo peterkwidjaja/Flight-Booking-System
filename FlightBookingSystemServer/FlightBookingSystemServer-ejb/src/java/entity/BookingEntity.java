@@ -37,9 +37,9 @@ public class BookingEntity implements Serializable {
     
     @ManyToOne
     private UserEntity owner = new UserEntity();
-    @OneToOne(cascade={CascadeType.PERSIST})
+    @OneToOne(cascade={CascadeType.ALL})
     private PaymentEntity payment;
-    @ManyToMany(cascade={CascadeType.PERSIST})
+    @ManyToMany(cascade={CascadeType.ALL})
     @JoinTable(name="BOOKINGMMBI_PASSENGERMMBI")
     private Set<PassengerEntity> passengers = new HashSet<PassengerEntity>();
     @ManyToMany(cascade={CascadeType.MERGE})
@@ -50,6 +50,9 @@ public class BookingEntity implements Serializable {
         Date now = new Date();
         DateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
         this.bookingTime = formatter.format(now);
+    }
+    public void create(double amount){
+        totalAmount = amount;
     }
     public int getId() {
         return id;

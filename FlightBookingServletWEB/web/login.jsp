@@ -26,8 +26,8 @@
           window.location.replace("index");
         </script>
         <%
-      }
-      %>       
+          }
+        %>       
       <h1>Login</h1>
       <form class="form-horizontal" action="login" method="POST">
         <div class="form-group">

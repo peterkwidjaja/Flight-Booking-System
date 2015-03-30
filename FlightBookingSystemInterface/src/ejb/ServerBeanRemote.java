@@ -60,4 +60,6 @@ public interface ServerBeanRemote {
     void changeUserDetails(String username, int contactNo, String email);
 
     List<Vector> searchSchedule(String departDate, String departCity, String arrivCity, int seats);
+
+    int createBooking(String username, int[] scheduleID, int seats, List<Vector> passengers);
 }

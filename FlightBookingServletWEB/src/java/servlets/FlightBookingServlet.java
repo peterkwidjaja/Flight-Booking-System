@@ -54,7 +54,6 @@ public class FlightBookingServlet extends HttpServlet {
             if(cookies!=null)
                 processCookie(cookies);
             
-            
             request.setAttribute("user", currentUser);
             ServletContext servletContext = getServletContext();
             String page = request.getPathInfo().substring(1); //get request page
@@ -75,6 +74,7 @@ public class FlightBookingServlet extends HttpServlet {
                 }
             }
             else if(page.equals("login")){
+                System.out.println("Opening login page");
                 String method = request.getMethod();
                 if("POST".equals(method)){
                     String hashedPass = login(request);
@@ -99,6 +99,24 @@ public class FlightBookingServlet extends HttpServlet {
                 if("POST".equals(method)){
                     search(request,response);
                     request.setAttribute("data", data);
+                }
+                else{
+                    request.setAttribute("data", data);
+                }
+            }
+            else if(page.equals("book")){
+                if("POST".equals(request.getMethod())){
+                    ArrayList<Object> list = new ArrayList<>();
+                    int seats = Integer.parseInt(request.getParameter("seats"));
+                    String scheduleChoice = request.getParameter("optionRadios");
+                    list.add(seats);
+                    list.add(scheduleChoice);
+                    request.setAttribute("data", list);
+                }
+            }
+            else if(page.equals("confirmBook")){
+                if("POST".equals(request.getMethod())){
+                    confirmBook(request);
                 }
             }
             else if(page.equals("update")){
@@ -148,6 +166,38 @@ public class FlightBookingServlet extends HttpServlet {
         
         ArrayList<Vector> list = (ArrayList) serverBean.searchSchedule(departDate, departureCity, arrivalCity, Integer.parseInt(seats));
         data = list;
+        request.setAttribute("seats", seats);
+    }
+    private void bookSingleFlight(String id, int seats){
+        
+    }
+    private void bookConnectFlight(String id1, String id2, int seats){
+        
+    }
+    private void confirmBook(HttpServletRequest request){
+        String[] schedule = request.getParameter("schedule").split(" ");
+        int seats = Integer.parseInt(request.getParameter("seats"));
+        ArrayList<Vector> list= new ArrayList<Vector>();
+        for(int i=1; i<=seats; i++){
+            Vector v = new Vector();
+            String name = request.getParameter("name"+i);
+            String passport = request.getParameter("passport"+i);
+            String gender = request.getParameter("gender"+i);
+            String dob = request.getParameter("dob"+i);
+            String dates[] = dob.split("-");
+            dob = dates[2]+"/"+dates[1]+"/"+dates[0];
+            v.add(name);
+            v.add(passport);
+            v.add(gender);
+            v.add(dob);
+            list.add(v);
+        }
+        int[] scheduleID = new int[schedule.length];
+        for(int i=0; i<scheduleID.length; i++){
+            scheduleID[i]=Integer.parseInt(schedule[i]);
+        }
+        serverBean.createBooking(currentUser, scheduleID, seats, list);
+        
     }
     private void processCookie(Cookie[] cookies){
         for(Cookie cookie: cookies){

@@ -1,4 +1,6 @@
 
+<%@page import="java.util.Vector"%>
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -49,22 +51,65 @@
     </div>
 
     <%
-        ArrayList<Vector> list = (ArrayList)request.getAtrribute("data");
+        ArrayList<Vector> list = (ArrayList)request.getAttribute("data");
         if(list!=null){
     %>
-    <div>
+
+    <div class="container">
         <h2>Search Result</h2>
         <form action="book" method="POST" >
-            <input type="hidden" name="noOfPassenger" value="" >
+            <input type="hidden" name="seats" value="<%= request.getAttribute("seats") %>" >
+
+            <%
+                for(Vector v: list){
+                    if(!(Boolean)v.get(0)){
+            %>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionRadios" value="option1">
-
+                    <input type="radio" name="optionRadios" value="<%= v.get(1) %>">
+                    <p><%= v.get(2) %></p>
+                    <p><%= v.get(3) %></p>
+                    <p><%= v.get(4) %></p>
+                    <p><%= v.get(5) %></p>
+                    <p><%= v.get(6) %></p>
+                    <p><%= v.get(7) %></p>
                 </label>
             </div>
-
+            <%
+                    }
+                    else{
+            %>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionRadios" value="<%= v.get(1) %>">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <p><%= v.get(2) %></p>
+                            <p><%= v.get(3) %></p>
+                            <p><%= v.get(4) %></p>
+                            <p><%= v.get(5) %></p>
+                            <p><%= v.get(6) %></p>
+                            <p><%= v.get(7) %></p>
+                        </div>
+                        <div class="col-sm-4">
+                            <p><%= v.get(8) %></p>
+                            <p><%= v.get(9) %></p>
+                            <p><%= v.get(10) %></p>
+                            <p><%= v.get(11) %></p>
+                            <p><%= v.get(12) %></p>
+                            <p><%= v.get(13) %></p>
+                        </div>                        
+                    </div>
+                </label>
+            </div>
+            <%
+                    }
+                }
+            %>
+            <button type="submit" class="btn btn-default">Book</button>
         </form>    
     </div>
+    
     <%
         }
     %>
