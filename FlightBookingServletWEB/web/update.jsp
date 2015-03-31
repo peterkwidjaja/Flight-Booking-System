@@ -63,7 +63,7 @@
                     <div class="form-group has-error has-feedback">
                         <label for="newPass" class="col-sm-2 control-label">New Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password" aria-describedby="inputError">
+                            <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password" aria-describedby="inputError" required>
                             <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                             <span id="inputError" class="sr-only">(error)</span>
                         </div>
@@ -75,7 +75,7 @@
                     <div class="form-group">
                         <label for="newPass" class="col-sm-2 control-label">New Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password">
+                            <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password" required>
                         </div>
                     </div>
                     <% }
@@ -84,7 +84,7 @@
                     <div class="form-group has-error has-feedback">
                         <label for="newPass2" class="col-sm-2 control-label">New Password Again</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" name="newPass2" id="newPass2" placeholder="Re-enter new password" aria-describedby="inputError">
+                            <input type="password" class="form-control" name="newPass2" id="newPass2" placeholder="Re-enter new password" aria-describedby="inputError" required>
                             <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                             <span id="inputError" class="sr-only">(error)</span>
                         </div>
@@ -95,7 +95,7 @@
                     <div class="form-group">
                         <label for="newPass2" class="col-sm-2 control-label">New Password Again</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" name="newPass2" id="newPass2" placeholder="Re-enter new password">
+                            <input type="password" class="form-control" name="newPass2" id="newPass2" placeholder="Re-enter new password" required>
                         </div>
                     </div>
                     <% } %>
@@ -107,14 +107,14 @@
                     <div class="form-group">
                         <label for="contactNo" class="col-sm-2 control-label">Contact Number</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" name="contactNo" id="contactNo" placeholder="Enter contact number" value="<%= data.get(1) %>">
+                            <input type="number" class="form-control" name="contactNo" id="contactNo" placeholder="Enter contact number" value="<%= data.get(1) %>" required>
                         </div>
 
                     </div>
                     <div class="form-group">
                         <label for="email" class="col-sm-2 control-label">Email Address</label>
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email address" value="<%= data.get(2) %>">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email address" value="<%= data.get(2) %>" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>

@@ -8,9 +8,7 @@ package entity;
 
 import java.io.Serializable;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,14 +26,14 @@ public class RequestEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String content;
-    private Time reqTime;
+    private Timestamp reqTime;
     private String status;
     private String comment;
     @ManyToOne
     private UserEntity owner = new UserEntity();
     
     public RequestEntity(){
-        reqTime = new Time(System.currentTimeMillis());
+        reqTime = new Timestamp(System.currentTimeMillis());
     }
     
     public void create(String content, String status, String comment){
@@ -112,14 +110,14 @@ public class RequestEntity implements Serializable {
     /**
      * @return the reqTime
      */
-    public Time getTime() {
+    public Timestamp getTime() {
         return reqTime;
     }
 
     /**
      * @param time the reqTime to set
      */
-    public void setTime(Time time) {
+    public void setTime(Timestamp time) {
         this.reqTime = time;
     }
     

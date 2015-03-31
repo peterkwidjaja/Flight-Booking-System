@@ -32,7 +32,7 @@ public class RMSBean implements RMSBeanRemote {
     // "Insert Code > Add Business Method")
 
     @Override
-    public boolean createMessage(String name, String content, String time) {
+    public boolean createMessage(String name, String content, long time) {
         Connection topicConnection = null;
         Session session = null;
         MapMessage message = null;
@@ -45,7 +45,7 @@ public class RMSBean implements RMSBeanRemote {
             message = session.createMapMessage();
             message.setString("name", name);
             message.setString("content", content);
-            message.setString("time", time);
+            message.setLong("time", time);
             producer.send(message);
             System.out.println("Delivery success!");
             

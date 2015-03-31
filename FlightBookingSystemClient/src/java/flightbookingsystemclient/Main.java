@@ -335,7 +335,7 @@ public class Main {
         System.out.print("\nEnter the request ID: ");
         int id = sc.nextInt();
         System.out.print("Change the status to: ");
-        String status = sc.next();
+        String status = sc.next().toUpperCase();
         sc.nextLine();
         System.out.print("Comments: ");
         String comment = sc.nextLine();

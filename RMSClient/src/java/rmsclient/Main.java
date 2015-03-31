@@ -33,10 +33,7 @@ public class Main {
             System.out.print("Enter the request content: ");
             String content = sc.nextLine();
             Calendar cal = Calendar.getInstance();
-            int h = cal.get(cal.HOUR_OF_DAY);
-            int m = cal.get(cal.MINUTE);
-            int s = cal.get(cal.SECOND);
-            String time = (h+":"+m+":"+s);
+            long time = cal.getTimeInMillis();
             try{
                 boolean result = rmsBean.createMessage(user, content, time);
                 if(result){

@@ -149,33 +149,17 @@ public class ServerBean implements ServerBeanRemote {
             return 0;
         Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"'");
         List l = q.getResultList();
-        Calendar newCal = getDate(departureTime);
         String date = departureTime.substring(6);
-        for (Object o: l){
+        for (Object o: l){ 
             ScheduleEntity temp = (ScheduleEntity) o;
             String dateTemp = temp.getDepartureTime().substring(6);
-            //Calendar c = getDate(temp.getDepartureTime());
-            //if(c.get(Calendar.YEAR)==newCal.get(Calendar.YEAR) && c.get(Calendar.MONTH)==newCal.get(Calendar.MONTH) && c.get(Calendar.DAY_OF_MONTH)==newCal.get(Calendar.DAY_OF_MONTH)){
             if(date.equals(dateTemp)){
                 return 2;
             }
         }
         return 1;
     }
-    private Calendar getDate(String input){
-        try{
-            DateFormat format = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(format.parse(input).getTime());
-            return cal;
-        }
-        catch(ParseException e){
-            System.err.println(e);
-            return null;
-        }
-    }
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+
     private ScheduleEntity findSchedule(String flightNo, String departureDate){
         Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.flightNo='"+flightNo+"'");
         List l = q.getResultList();
@@ -469,15 +453,6 @@ public class ServerBean implements ServerBeanRemote {
         }
         return result;
     }
-    private void filterDate(List list, String departDate){
-        for(Object o: list){
-            ScheduleEntity schedule = (ScheduleEntity) o;
-            String flightDate = schedule.getDepartureTime().substring(6);
-            if(!flightDate.equals(departDate)){
-                list.remove(o);          
-            }
-        }
-    }
     
     //Create a database entry of booking with username and updated schedules. Seats are processed.
     /*
@@ -600,7 +575,7 @@ public class ServerBean implements ServerBeanRemote {
 
     @Override
     public List<Vector> viewUserRequests(String username) {
-        Query q = em.createQuery("SELECT r FROM Requests r WHERE r.owner.username=:user");
+        Query q = em.createQuery("SELECT r FROM Requests r WHERE r.owner.username=:user ORDER BY r.reqTime");
         q.setParameter("user", username);
         List<Vector> result = new ArrayList<Vector>();
         for(Object o: q.getResultList()){

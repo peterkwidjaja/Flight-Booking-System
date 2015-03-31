@@ -8,6 +8,7 @@ package ejb;
 import entity.RequestEntity;
 import entity.UserEntity;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Random;
 import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
@@ -62,14 +63,14 @@ public class RMSMessageBean implements MessageListener {
         try{
             String name = msg.getString("name");
             String content = msg.getString("content");
-            String time = msg.getString("time");
+            long time = msg.getLong("time");
             
             UserEntity u = em.find(UserEntity.class, name);
             if(u!=null){
                 RequestEntity request = new RequestEntity();
                 request.create(content,"UNREAD", "");
                 request.setOwner(u);
-                Time t = Time.valueOf(time);
+                Timestamp t = new Timestamp(time);
                 request.setTime(t);
                 u.getRequests().add(request);
                 em.persist(request);

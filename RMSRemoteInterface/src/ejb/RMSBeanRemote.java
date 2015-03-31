@@ -14,6 +14,6 @@ import javax.ejb.Remote;
 @Remote
 public interface RMSBeanRemote {
 
-    boolean createMessage(String name, String content, String time);
+    boolean createMessage(String name, String content, long time);
     
 }
