@@ -386,7 +386,8 @@ public class ServerBean implements ServerBeanRemote {
     public List<Vector> searchSchedule(String departDate, String departCity, String arrivCity, int seats){
         Query q = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.departureCity='"+departCity+"' AND s.availableSeats>="+seats);   //get flights that have more than required seats and correct departure city
         List list = q.getResultList();
-        if(list.size()==0){
+        System.out.println("Found "+list+" schedules");
+        if(list.isEmpty()){
             return null;
         }
         List<Vector> result = new ArrayList<>();
@@ -432,14 +433,13 @@ public class ServerBean implements ServerBeanRemote {
                                 v.add(schedule.getDepartureTime());
                                 v.add(schedule.getFlight().getArrivalCity());
                                 v.add(schedule.getArrivalTime());
-                                v.add(schedule.getPrice());
                                 v.add(transit.getId());
                                 v.add(transit.getFlight().getFlightNo());
                                 v.add(transit.getFlight().getDepartureCity());
                                 v.add(transit.getDepartureTime());
                                 v.add(transit.getFlight().getArrivalCity());
                                 v.add(transit.getArrivalTime());
-                                v.add(transit.getPrice());
+                                v.add(transit.getPrice()+schedule.getPrice());
                                 result.add(v);
                             }                        
                         }

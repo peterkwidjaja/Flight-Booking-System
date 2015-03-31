@@ -27,7 +27,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-brand">Flight Booking System</a>
+                <a href="index" class="navbar-brand">Flight Booking System</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav nav-pills navbar-nav">
@@ -118,7 +118,7 @@
         if(list!=null){
     %>
 
-    <div class="container">
+    <div class="container" style="padding-bottom: 30px;">
         <h2>Search Result</h2>
         <form action="book" method="POST" >
             <input type="hidden" name="seats" value="<%= request.getAttribute("seats") %>" >
@@ -127,43 +127,36 @@
                 for(Vector v: list){
                     if(!(Boolean)v.get(0)){
             %>
-            <div class="radio">
-                <label>
+            <div class="radio" style="margin-bottom: 25px; padding-left: 15px;">
+                
                     <input type="radio" name="optionRadios" value="<%= v.get(1) %>">
-                    <p><%= v.get(2) %></p>
-                    <p><%= v.get(3) %></p>
-                    <p><%= v.get(4) %></p>
-                    <p><%= v.get(5) %></p>
-                    <p><%= v.get(6) %></p>
-                    <p><%= v.get(7) %></p>
-                </label>
+                    <p>Flight Number: <%= v.get(2) %></p>
+                    <p>Departure: <%= v.get(3) %> <%= v.get(4) %></p>
+                    <p>Arrival: <%= v.get(5) %> <%= v.get(6) %></p>
+                    <p>Total Price: <%= v.get(7) %></p>
+                
             </div>
             <%
                     }
                     else{
             %>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionRadios" value="<%= v.get(1) +" "+ v.get(8)%>">
+            <div class="radio" style="margin-bottom: 25px; padding-left: 15px;">
+                
+                    <input type="radio" name="optionRadios" value="<%= v.get(1) +" "+ v.get(7)%>">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <p><%= v.get(2) %></p>
-                            <p><%= v.get(3) %></p>
-                            <p><%= v.get(4) %></p>
-                            <p><%= v.get(5) %></p>
-                            <p><%= v.get(6) %></p>
-                            <p><%= v.get(7) %></p>
+                        <div class="col-md-4">
+                            <p>Flight 1 Number: <%= v.get(2) %></p>
+                            <p>Departure: <%= v.get(3) %> <%= v.get(4) %></p>
+                            <p>Arrival: <%= v.get(5) %> <%= v.get(6) %></p>
                         </div>
-                        <div class="col-sm-6">
-                            <p><%= v.get(9) %></p>
-                            <p><%= v.get(10) %></p>
-                            <p><%= v.get(11) %></p>
-                            <p><%= v.get(12) %></p>
-                            <p><%= v.get(13) %></p>
-                            <p><%= v.get(14) %></p>
+                        <div class="col-md-4">
+                            <p>Flight 2 Number: <%= v.get(8) %></p>
+                            <p>Departure: <%= v.get(9) %> <%= v.get(10) %></p>
+                            <p>Arrival: <%= v.get(11) %> <%= v.get(12) %></p>
                         </div>                        
                     </div>
-                </label>
+                        <p>Total Price: <%= v.get(13) %></p>
+                
             </div>
             <%
                     }

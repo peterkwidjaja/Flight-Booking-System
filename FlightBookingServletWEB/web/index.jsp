@@ -31,7 +31,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-brand">Flight Booking System</a>
+                <a href="index" class="navbar-brand">Flight Booking System</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav nav-pills navbar-nav">

@@ -30,7 +30,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="#" class="navbar-brand">Flight Booking System</a>
+                    <a href="index" class="navbar-brand">Flight Booking System</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav nav-pills navbar-nav">
@@ -84,19 +84,19 @@
             <form action="registerStatus" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter username">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password" required>
                 </div>
                 <div class="form-group">
                     <label for="contact">Contact Number</label>
-                    <input type="number" class="form-control" name="contactNo" id="contact" placeholder="Contact Number">
+                    <input type="number" class="form-control" name="contactNo" id="contact" placeholder="Contact Number" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter Email Address">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter Email Address" required>
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>

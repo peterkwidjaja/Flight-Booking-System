@@ -17,6 +17,16 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     </head>
     <body>
+                <%
+                    Object o = request.getAttribute("data");
+            if(o==null){
+        %>
+        <script>
+            window.location.replace("index");
+        </script>
+        <%
+            }
+        %>
         <%
             String currentUser = (String)request.getAttribute("user");
             boolean isLoggedIn = !currentUser.equals("");
@@ -30,7 +40,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="#" class="navbar-brand">Flight Booking System</a>
+                    <a href="index" class="navbar-brand">Flight Booking System</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav nav-pills navbar-nav">
@@ -79,15 +89,7 @@
             </div>
         </nav>        
         <%-- CHECK FOR LOGIN --%>
-        <%
-            if(request.getAttribute("data")==null){
-        %>
-        <script>
-            window.location.replace("index");
-        </script>
-        <%
-            }
-        %>
+
         <div class="container">
             <h1>Passenger Details</h1>
             <form action="confirmBook" method="POST">

@@ -51,6 +51,7 @@ public class FlightBookingServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             RequestDispatcher dispatcher;
             data=null;  //Reset data
+            currentUser="";
             Cookie[] cookies = request.getCookies();
             if(cookies!=null)
                 processCookie(cookies);
@@ -59,8 +60,7 @@ public class FlightBookingServlet extends HttpServlet {
             ServletContext servletContext = getServletContext();
             String page = request.getPathInfo().substring(1); //get request page
             
-            if(page.equals("register")){
-                
+            if(page.equals("register")){  
             }
             else if(page.equals("registerStatus")){
                 if(register(request)){
@@ -107,18 +107,13 @@ public class FlightBookingServlet extends HttpServlet {
             }
             else if(page.equals("book")){
                 if("POST".equals(request.getMethod())){
-                    ArrayList<Object> list = new ArrayList<>();
-                    int seats = Integer.parseInt(request.getParameter("seats"));
-                    String scheduleChoice = request.getParameter("optionRadios");
-                    list.add(seats);
-                    list.add(scheduleChoice);
-                    request.setAttribute("data", list);
-                    page = "index";
+                    book(request);
                 }
             }
             else if(page.equals("confirmBook")){
                 if("POST".equals(request.getMethod())){
                     confirmBook(request);
+                    page = "payment";
                 }
             }
             
@@ -136,6 +131,7 @@ public class FlightBookingServlet extends HttpServlet {
                 }
                 else{
                     makePayment(request,response);
+                    page = "bookings";
                 }
             }
             else if(page.equals("request")){
@@ -193,7 +189,14 @@ public class FlightBookingServlet extends HttpServlet {
         data = list;
         request.setAttribute("seats", seats);
     }
-    
+    private void book(HttpServletRequest request){
+        ArrayList<Object> list = new ArrayList<>();
+        int seats = Integer.parseInt(request.getParameter("seats"));
+        String scheduleChoice = request.getParameter("optionRadios");
+        list.add(seats);
+        list.add(scheduleChoice);
+        request.setAttribute("data", list);
+    }
     private void confirmBook(HttpServletRequest request){
         String[] schedule = request.getParameter("schedule").split(" ");
         int seats = Integer.parseInt(request.getParameter("seats"));
@@ -264,6 +267,9 @@ public class FlightBookingServlet extends HttpServlet {
     private void login(String username, String password){
         if(serverBean.login(username, password)){
             currentUser = username;
+        }
+        else{
+            currentUser = "";
         }
     }
     

@@ -20,11 +20,44 @@ import javax.ejb.EJB;
 public class Main {
     @EJB
     private static ServerBeanRemote serverBean;
+    
+    private static void populate(){
+        serverBean.addUser("user", "12345",12345 , "user@nus.com");
+        serverBean.addUser("test", "54321",54321 , "test@nus.com");
+        serverBean.addUser("bob", "pass1234",1234 , "pass1234@nus.com");
+        serverBean.addUser("ann", "qwerty",12345 , "qwerty@nus.com");
+        
+        serverBean.addFlight("SQ868", "Singapore", "Hong Kong", "Airbus 330", 5);
+        serverBean.addFlight("SQ831", "Singapore", "Bangkok", "Boeing 777", 5);
+        serverBean.addFlight("MH780", "Kuala Lumpur", "Bangkok", "Boeing 737", 5);
+        serverBean.addFlight("CX703", "Bangkok", "Hong Kong", "Boeing 777", 5);
+        serverBean.addFlight("MH776", "Kuala Lumpur", "Bangkok", "Boeing 737", 5);
+        serverBean.addFlight("MH616", "Singapore", "Kuala Lumpur", "Boeing 747", 5);
+        serverBean.addFlight("TG602", "Bangkok", "Hong Kong", "Airbus 330", 5);
+        serverBean.addFlight("CX716", "Singapore", "Hong Kong", "Airbus 333", 5);
+        
+        serverBean.addSchedule("SQ868", "22:05 16/04/2015", "01:47 17/04/2015", 930.0);
+        serverBean.addSchedule("SQ868", "02:00 17/04/2015", "05:42 17/04/2015", 1070.0);
+        serverBean.addSchedule("SQ831", "23:30 16/04/2015", "01:55 17/04/2015", 750.0);
+        serverBean.addSchedule("SQ831", "04:20 17/04/2015", "06:45 17/04/2015", 780.0);
+        serverBean.addSchedule("MH780", "22:15 16/04/2015", "00:15 17/04/2015", 440.0);
+        serverBean.addSchedule("MH780", "00:50 17/04/2015", "02:50 17/04/2015", 480.0);
+        serverBean.addSchedule("CX703", "23:00 16/04/2015", "01:38 17/04/2015", 570.0);
+        serverBean.addSchedule("CX703", "04:30 17/04/2015", "07:08 17/04/2015", 640.0);
+        serverBean.addSchedule("MH776", "12:15 16/04/2015", "14:15 17/04/2015", 340.0);
+        serverBean.addSchedule("MH776", "03:50 17/04/2015", "05:50 17/04/2015", 380.0);
+        serverBean.addSchedule("MH616", "20:35 16/04/2015", "21:38 16/04/2015", 250.0);
+        serverBean.addSchedule("MH616", "02:10 17/04/2015", "03:13 17/04/2015", 250.0);
+        serverBean.addSchedule("TG602", "13:30 16/04/2015", "15:55 17/04/2015", 420.0);
+        serverBean.addSchedule("TG602", "09:20 17/04/2015", "11:45 17/04/2015", 420.0);
+        serverBean.addSchedule("CX716", "23:15 16/04/2015", "02:57 17/04/2015", 710.0);
+        serverBean.addSchedule("CX716", "07:08 17/04/2015", "10:50 17/04/2015", 745.0);
 
+    }
     public static void main(String[] args) {
         // TODO code application logic here
         Main client = new Main();
-        
+        populate();
         boolean flag = true;
         while(flag){
             Scanner sc = new Scanner(System.in);

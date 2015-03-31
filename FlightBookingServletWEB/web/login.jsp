@@ -30,6 +30,13 @@
     <%
         String currentUser = (String)request.getAttribute("user");
         boolean isLoggedIn = !currentUser.equals("");
+        if(isLoggedIn){
+    %>
+    <script>
+          window.location.replace("index");
+    </script>
+    <%
+        }
     %>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -40,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-brand">Flight Booking System</a>
+                <a href="index" class="navbar-brand">Flight Booking System</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav nav-pills navbar-nav">

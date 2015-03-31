@@ -34,7 +34,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-brand">Flight Booking System</a>
+                <a href="index" class="navbar-brand">Flight Booking System</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav nav-pills navbar-nav">
@@ -107,9 +107,9 @@
                 %>
             </div>
             <h4>Passenger(s):</h4>
-            <div class="carousel slide" data-ride="carousel" id="carousel-pass1">
+            <div class="carousel slide" data-ride="carousel" id="carousel-pass<%= i%>" data-interval="false">
                 <ol class="carousel-indicators">
-                       <li data-target="#carousel-pass1" data-slide-to="0"></li>
+                       <li data-target="#carousel-pass<%= i%>" data-slide-to="0"></li>
                 </ol>
                 <div class="carousel-inner" role="listbox">
                     <%
@@ -140,10 +140,10 @@
                 }
                 %>
                 </div>
-                <a class="left carousel-control" href="#carousel-pass1" role="button" data-slide="prev">
+                <a class="left carousel-control" href="#carousel-pass<%= i%>" role="button" data-slide="prev">
                    <span class="glyphicon glyphicon-chevron-left">
                 </a>
-                <a class="right carousel-control" href="#carousel-pass1" role="button" data-slide="next">
+                <a class="right carousel-control" href="#carousel-pass<%= i%>" role="button" data-slide="next">
                    <span class="glyphicon glyphicon-chevron-right">
                 </a>                   
             </div>
