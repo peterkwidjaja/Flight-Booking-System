@@ -335,7 +335,7 @@ public class ServerBean implements ServerBeanRemote {
             RequestEntity r = (RequestEntity) o;
             Vector req = new Vector();
             req.add(r.getId());
-            req.add(r.getTime());
+            req.add(r.getTime().toString());
             req.add(r.getOwner().getUsername());
             req.add(r.getContent());
             
@@ -428,7 +428,7 @@ public class ServerBean implements ServerBeanRemote {
 
                 else{
                     String stop = schedule.getFlight().getArrivalCity();
-                    Query q2 = em.createQuery("SELECT s FROM Schedules s  s.flight.departureCity='"+stop+"' AND s.flight.arrivalCity ='"+arrivCity+"' AND s.availableSeats>="+seats);
+                    Query q2 = em.createQuery("SELECT s FROM Schedules s WHERE s.flight.departureCity='"+stop+"' AND s.flight.arrivalCity ='"+arrivCity+"' AND s.availableSeats>="+seats);
                     for(Object obj: q2.getResultList()){
                         try{
                             ScheduleEntity transit = (ScheduleEntity) obj;
@@ -548,9 +548,53 @@ public class ServerBean implements ServerBeanRemote {
         BookingEntity booking = em.find(BookingEntity.class, bookingID);
         PaymentEntity payment = new PaymentEntity();
         payment.create(cardType, cardNo, name);
-        payment.setBooking(booking);
         booking.setPayment(payment);
         em.persist(payment);
+    }
+
+    @Override
+    public List<Vector> getBookings(String username) {
+        Query q = em.createQuery("SELECT b FROM Bookings b WHERE b.owner.username=:user");
+        q.setParameter("user", username);
+        List<Vector> bookings = new ArrayList();
+        for(Object o: q.getResultList()){
+            BookingEntity b = (BookingEntity) o;
+            List<Vector> schedules = new ArrayList();
+            for(Object s: b.getSchedules()){
+                ScheduleEntity schedule = (ScheduleEntity) s;
+                Vector sch = new Vector();
+                sch.add(schedule.getFlight().getFlightNo());
+                sch.add(schedule.getFlight().getDepartureCity()+" "+schedule.getDepartureTime());
+                sch.add(schedule.getFlight().getArrivalCity()+" "+schedule.getArrivalTime());
+                schedules.add(sch);
+            }
+            List<Vector> passengers = new ArrayList();
+            for(Object p: b.getPassengers()){
+                PassengerEntity passenger = (PassengerEntity) p;
+                Vector psg = new Vector();
+                psg.add(passenger.getName());
+                psg.add(passenger.getPassportNo());
+                psg.add(passenger.getGender());
+                psg.add(passenger.getDob());
+                passengers.add(psg);
+            }
+            Vector bookingDetails = new Vector();
+            bookingDetails.add(b.getId());
+            bookingDetails.add(b.getBookingTime());
+            bookingDetails.add(schedules);
+            bookingDetails.add(passengers);  
+            bookingDetails.add(b.getTotalAmount());
+            PaymentEntity payment = b.getPayment();
+            if(payment==null){
+                bookingDetails.add(false);
+            }
+            else{
+                bookingDetails.add(true);
+            }
+
+            bookings.add(bookingDetails);
+        }
+        return bookings;
     }
     
     

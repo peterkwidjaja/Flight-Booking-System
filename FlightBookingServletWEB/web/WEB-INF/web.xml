@@ -90,7 +90,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>makePayment</servlet-name>
-        <url-pattern>/paid</url-pattern>
+        <url-pattern>/makePayment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -66,4 +66,6 @@ public interface ServerBeanRemote {
     List<Vector> getUnpaidBooking(String username);
 
     void makePayment(int bookingID, String cardType, long cardNo, String name);
+
+    List<Vector> getBookings(String username);
 }

@@ -28,7 +28,7 @@ public class Main {
         boolean flag = true;
         while(flag){
             Scanner sc = new Scanner(System.in);
-            System.out.println("\n1. Add User\n2. Delete User\n3. Add Flights\n4. Update Flights\n5. Delete Flights\n6. Add Schedules");
+            System.out.println("\nPlease enter your choice:\n1. Add User\n2. Delete User\n3. Add Flights\n4. Update Flights\n5. Delete Flights\n6. Add Schedules\n7. Update Schedules\n8. Delete Schedules\n9. View Bookings\n10. View Schedules\n11. View Flights\n12. Process Request");
             int command = sc.nextInt();
             sc.nextLine();
             switch(command){
@@ -49,6 +49,24 @@ public class Main {
                     break;
                 case 6:
                     client.addSchedule(sc);
+                    break;
+                case 7:
+                    client.updateSchedule(sc);
+                    break;
+                case 8:
+                    client.deleteSchedule(sc);
+                    break;
+                case 9:
+                    client.viewBookings();
+                    break;
+                case 10:
+                    client.viewSchedules();
+                    break;
+                case 11:
+                    client.viewFlights();
+                    break;
+                case 12:
+                    client.processRequest(sc);
                     break;
                 default:
                     break;
@@ -306,13 +324,13 @@ public class Main {
             System.out.println("Arrival city: " + temp.get(2));
             System.out.println("Aircraft type: "+temp.get(3));
             System.out.println("Total seats: "+temp.get(4));
+            count++;
         }
     }
     public void processRequest(Scanner sc){
         for(Object o: serverBean.viewRequests()){
             Vector temp = (Vector) o;
             System.out.println(temp.get(0)+": "+temp.get(1)+", "+temp.get(2)+", \""+ temp.get(3)+"\"");
-            
         }
         System.out.print("\nEnter the request ID: ");
         int id = sc.nextInt();

@@ -7,6 +7,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,16 +28,14 @@ public class RequestEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String content;
-    private String reqTime;
+    private Time reqTime;
     private String status;
     private String comment;
     @ManyToOne
     private UserEntity owner = new UserEntity();
     
     public RequestEntity(){
-        Date now = new Date();
-        DateFormat formatter = new SimpleDateFormat("HH:mm");
-        this.reqTime = formatter.format(now);
+        reqTime = new Time(System.currentTimeMillis());
     }
     
     public void create(String content, String status, String comment){
@@ -113,14 +112,14 @@ public class RequestEntity implements Serializable {
     /**
      * @return the reqTime
      */
-    public String getTime() {
+    public Time getTime() {
         return reqTime;
     }
 
     /**
      * @param time the reqTime to set
      */
-    public void setTime(String time) {
+    public void setTime(Time time) {
         this.reqTime = time;
     }
     

@@ -41,6 +41,7 @@
                     %>
                     <li><a href="search" title="">Search</a></li>
                     <li><a href="view" title="">Booking</a></li>
+                    <li><a href="payment" title="">Payment</a></li>
                     <li><a href="request" title="">Request</a></li>
                     <%
                         }

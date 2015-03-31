@@ -36,6 +36,7 @@
                     %>
                     <li><a href="search" title="">Search</a></li>
                     <li><a href="view" title="">Booking</a></li>
+                    <li><a href="payment" title="">Payment</a></li>
                     <li><a href="request" title="">Request</a></li>
                     <%
                         }
@@ -143,9 +144,9 @@
             %>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionRadios" value="<%= v.get(1) %>">
+                    <input type="radio" name="optionRadios" value="<%= v.get(1) +" "+ v.get(8)%>">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <p><%= v.get(2) %></p>
                             <p><%= v.get(3) %></p>
                             <p><%= v.get(4) %></p>
@@ -153,13 +154,13 @@
                             <p><%= v.get(6) %></p>
                             <p><%= v.get(7) %></p>
                         </div>
-                        <div class="col-sm-4">
-                            <p><%= v.get(8) %></p>
+                        <div class="col-sm-6">
                             <p><%= v.get(9) %></p>
                             <p><%= v.get(10) %></p>
                             <p><%= v.get(11) %></p>
                             <p><%= v.get(12) %></p>
                             <p><%= v.get(13) %></p>
+                            <p><%= v.get(14) %></p>
                         </div>                        
                     </div>
                 </label>

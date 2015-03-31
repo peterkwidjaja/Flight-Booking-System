@@ -31,8 +31,6 @@ public class PaymentEntity implements Serializable {
     private String cardHolderName;
     private String paymentTime;
     
-    @OneToOne(mappedBy="payment")
-    private BookingEntity booking;
     
     public PaymentEntity(){ //auto-generation of payment time
         Date now = new java.util.Date();
@@ -110,13 +108,4 @@ public class PaymentEntity implements Serializable {
     public void setPaymentTime(String paymentTime) {
         this.paymentTime = paymentTime;
     }
-
-    public BookingEntity getBooking() {
-        return booking;
-    }
-
-    public void setBooking(BookingEntity booking) {
-        this.booking = booking;
-    }
-    
 }

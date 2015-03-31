@@ -36,6 +36,7 @@
                     %>
                     <li><a href="search" title="">Search</a></li>
                     <li><a href="view" title="">Booking</a></li>
+                    <li><a href="payment" title="">Payment</a></li>
                     <li><a href="request" title="">Request</a></li>
                     <%
                         }
@@ -93,38 +94,38 @@
 		%>
 		<form action="makePayment" method="GET" class="form-horizontal">
 			<div class="form-group">
-				<label class="col-sm-2 control-label">Booking Number:</label>
-				<div class="col-sm-10">
+				<label class="col-sm-4 control-label">Booking Number:</label>
+				<div class="col-sm-8">
 					<input type="hidden" name="bookingNo" value="<%= v.get(0)%>">
 					<p class="form-control-static"><%= v.get(0) %></p>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">Booking Time:</label>
-				<div class="col-sm-10">
+				<label class="col-sm-4 control-label">Booking Time:</label>
+				<div class="col-sm-8">
 					<p class="form-control-static"><%= v.get(1) %></p>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">Route:</label>
-				<div class="col-sm-10">
+				<label class="col-sm-4 control-label">Route:</label>
+				<div class="col-sm-8">
 					<p class="form-control-static"><%= v.get(2) %></p>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">Number of Passengers:</label>
-				<div class="col-sm-10">
+				<label class="col-sm-4 control-label">Number of Passengers:</label>
+				<div class="col-sm-8">
 					<p class="form-control-static"><%= v.get(3) %></p>
 				</div>
 			</div>						
 			<div class="form-group">
-				<label class="col-sm-2 control-label"><b>Total Amount</b></label>
-				<div class="col-sm-10">
+				<label class="col-sm-4 control-label"><b>Total Amount</b></label>
+				<div class="col-sm-8">
 					<p class="form-control-static"><%= v.get(4) %></p>
 				</div>
 			</div>				
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-sm-offset-4 col-sm-8">
                     <button type="submit" class="btn btn-default">Make Payment</button>
                 </div>
             </div>			                  

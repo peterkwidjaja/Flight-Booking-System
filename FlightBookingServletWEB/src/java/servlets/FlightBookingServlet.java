@@ -138,6 +138,9 @@ public class FlightBookingServlet extends HttpServlet {
                     makePayment(request,response);
                 }
             }
+            else if(page.equals("view")){
+                viewBookings(request, response);
+            }
             else if(page.equals("update")){
                 data = getUserInfo();
                 request.setAttribute("data", data);
@@ -331,6 +334,10 @@ public class FlightBookingServlet extends HttpServlet {
         long cardNo = Long.parseLong(request.getParameter("cardNo"));
         String name = request.getParameter("name");
         serverBean.makePayment(id, cardtype, cardNo, name);
+    }
+    private void viewBookings(HttpServletRequest request, HttpServletResponse response){
+        ArrayList<Vector> result = (ArrayList) serverBean.getBookings(currentUser);
+        request.setAttribute("data", result);
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
