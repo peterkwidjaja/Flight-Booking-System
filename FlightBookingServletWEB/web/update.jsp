@@ -40,7 +40,7 @@
                     <div class="form-group has-error has-feedback">
                         <label for="oldPass" class="col-sm-2 control-label">Old Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter old password" aria-describedby="inputError">
+                            <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter old password" aria-describedby="inputError" required>
                             <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                             <span id="inputError" class="sr-only">(error)</span>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label for="oldPass" class="col-sm-2 control-label">Old Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter old password">
+                            <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter old password" required>
                         </div>
                     </div>
                     <%

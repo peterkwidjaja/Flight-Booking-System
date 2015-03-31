@@ -68,4 +68,6 @@ public interface ServerBeanRemote {
     void makePayment(int bookingID, String cardType, long cardNo, String name);
 
     List<Vector> getBookings(String username);
+
+    List<Vector> viewUserRequests(String username);
 }

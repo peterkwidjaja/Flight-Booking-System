@@ -329,7 +329,7 @@ public class ServerBean implements ServerBeanRemote {
 
     @Override
     public List<Vector> viewRequests() {
-        Query q = em.createQuery("SELECT r FROM Requests r WHERE r.status='Unread' OR r.status='Processing'");
+        Query q = em.createQuery("SELECT r FROM Requests r WHERE r.status='UNREAD' OR r.status='PROCESSING'");
         List<Vector> requests = new ArrayList();
         for(Object o: q.getResultList()){
             RequestEntity r = (RequestEntity) o;
@@ -343,6 +343,7 @@ public class ServerBean implements ServerBeanRemote {
         }
         return requests;
     }
+    
 
     @Override
     public boolean processRequest(int id, String status, String comment) {
@@ -595,6 +596,24 @@ public class ServerBean implements ServerBeanRemote {
             bookings.add(bookingDetails);
         }
         return bookings;
+    }
+
+    @Override
+    public List<Vector> viewUserRequests(String username) {
+        Query q = em.createQuery("SELECT r FROM Requests r WHERE r.owner.username=:user");
+        q.setParameter("user", username);
+        List<Vector> result = new ArrayList<Vector>();
+        for(Object o: q.getResultList()){
+            RequestEntity r = (RequestEntity) o;
+            Vector v = new Vector();
+            v.add(r.getId());
+            v.add(r.getTime().toString());
+            v.add(r.getContent());
+            v.add(r.getStatus());
+            v.add(r.getComment());
+            result.add(v);
+        }
+        return result;
     }
     
     
